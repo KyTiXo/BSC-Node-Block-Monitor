@@ -7,7 +7,7 @@ Bash script that compares local geth block number to BSCscan.com's API. If the l
 ### Setup:
 - ```sudo apt install jq``` - requires JQ to be installed for parsing Json from BscScan API
 - ```sudo chmod +x watchBlocksLive```
-- Add ```BSCSCANAPIKEY``` from https://bscscan.com/myapikey
+- Add ```BSCSCANAPIKEY``` into script from https://bscscan.com/myapikey
 
 ### Run:
 - ```./watchBlocksLive```
