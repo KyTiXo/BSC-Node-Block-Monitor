@@ -51,15 +51,14 @@ echo NODE Local Block: $highest
 echo ""
 if [[ "0" -eq $highest ]]; then
 	echo -e "${RED}Out of Sync!...${NC}";
-    echo -e "${GREEN}Starting Log Monitor:${NC}";
-    echo =============================
+	echo -e "${GREEN}Starting Log Monitor:${NC}";
+echo =============================
     while true; do stillSyncing; sleep 2; done
 else
-
-if [[ "0" -lt $diff ]]; then
-    echo -e "${RED}You are $diff blocks behind${NC}"
-else
-    echo -e "${GREEN}You are synced and AHEAD of BSCscan.com by $((-1 * $diff)) blocks${NC}"
-fi
+    if [[ "0" -lt $diff ]]; then
+        echo -e "${RED}You are $diff blocks behind${NC}"
+    else
+        echo -e "${GREEN}You are synced and AHEAD of BSCscan.com by $((-1 * $diff)) blocks${NC}"
+    fi
 fi
 echo =============================
