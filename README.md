@@ -12,7 +12,7 @@ Setup:
 Run:
 - ./watchBlocksLive
 
-If you are havn't converted into a full node yet and still downloading states:
+Result if the node hasn't converted into a full node yet, it will monitor the log for the age-from-live-block variable without clutter.
 - ![image](https://user-images.githubusercontent.com/28745523/117009256-8974ea00-acb9-11eb-8aa9-5bab9edbbf40.png)
 
 You were a full node, but now behind in blocks
