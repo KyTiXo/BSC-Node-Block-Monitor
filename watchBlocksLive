@@ -17,6 +17,30 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+function checkDepends(){
+if ! command -v jq &> /dev/null
+then
+    throwErr "JQ Not installed" "n/a" "n/a" "Please install JQ with 'apt install jq'" ;
+    exit
+fi
+
+if [ ! -f "$BSCLOG" ]; then
+    throwErr "BSC.log not found at $BSCLOG" "n/a" "n/a" "Please edit the path to the BSC log file" ;
+    exit
+fi
+
+if [ ! -f "$GETHLOCATION" ]; then
+    throwErr "Geth executable not found at $GETHLOCATION" "n/a" "n/a" "Please edit the path to the GETH executable" ;
+    exit
+fi
+
+if [ -z "$BSCSCANAPIKEY" ] || [ "$BSCSCANAPIKEY" == "APIKEYPASTEHERE" ]; then
+    throwErr "Missing API Key" "n/a" "n/a" "Please update your BSCScan API key in the script";
+    exit
+fi
+}
+
 function get_age() {
     echo "$(tail -1 $BSCLOG | awk '/age/ {print $11}')";
 }
@@ -31,17 +55,43 @@ function stillSyncing(){
 
     if [[ "$var" != "$var2" ]] && [[ "$var2" != "" ]]; then
         var=$var2
-        echo -ne ' 'Synced age from latest block: ${RED}${var//"age="/}${NC}  \\r
+        echo -ne ' 'Block AGE from BSC Latest Block: ${RED}${var//"age="/}${NC}  \\r
         sleep 2
     fi
 }
-#===================================
 
-#get value from bsc
-echo -e ${NC}'Grabbing latest block from BSCScan API'
-url='https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp='$(date +"%s")'&closest=before&apikey='$BSCSCANAPIKEY
+function throwErr(){
+        echo ""
+        echo "=============== ERROR =================="
+        echo -e "${RED}ERROR:${NC} $1"
+        echo -e "${RED}API Response:${NC} $2"
+        echo -e "${RED}URL:${NC} $3"
+        echo ""
+        echo -e "${RED}Note:${YELLOW} $4 ${NC}"
+        echo "========================================"
+        echo ""
+}
+
+function curlBscscan(){
+    #url='https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp='$(date +"%s")'&closest=before&apikey='$BSCSCANAPIKEY
+    #old URL was throwing getting out of sync with BSCScan
+    url='https://api.bscscan.com/api?module=proxy&action=eth_blockNumber&apikey='$BSCSCANAPIKEY
+    response=$(curl -s "$url")
+    hexresult=$(echo $response | jq -r '.result')
+    result=$(($hexresult))
+
+    if [[ $result == ?(-)+([0-9]) ]]; then
+        #reponse is an block number
+        currentblock=$result
+    else
+        throwErr "BSCScan API" "$response" "$url" "BSCScans API could be down or out of sync"
+        exit
+    fi
+}
+#===================================
+checkDepends
+curlBscscan
 highest=$($GETHLOCATION attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
-currentblock=$(curl -s "$url" | jq -r '.result')
 diff="$(($currentblock - $highest))"
 
 echo =============================
@@ -61,4 +111,3 @@ else
         echo -e "${GREEN}You are synced and AHEAD of BSCscan.com by $((-1 * $diff)) blocks${NC}"
     fi
 fi
-echo =============================
