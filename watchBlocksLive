@@ -73,7 +73,7 @@ function stillSyncing(){
 
     currentDiff="$(($highestBlock - $currentBlock))"
 
-    TABLEDATA="Highest,Current,Diff,AgeDiff\n$highestBlock,$currentBlock,$currentDiff,36m"
+    TABLEDATA="Highest,Current,Diff,AgeDiff\n$highestBlock,$currentBlock,$currentDiff,$AGE"
     printTable ',' $(echo $TABLEDATA)
     firstsync="0"
     sleep 3
