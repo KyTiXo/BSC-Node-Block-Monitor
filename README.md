@@ -7,8 +7,8 @@ Bash script that compares local geth block number to BSCscan.com's API. If out o
 ### Setup:
 - ```sudo apt install jq``` - requires JQ to be installed for parsing Json from BscScan API
 - ```sudo chmod +x watchBlocksLive```
-- Add APIKey and BSC log location at top of script
-- Script assumes Geth execute is in the same directory, if not edit line 42 (./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
+- Add APIKey in script from https://bscscan.com/myapikey
+- Script assumes Geth execute is in the same directory, if not edit the locations of bsclog and geth at the top of the script.
 
 ### Run:
 - ```./watchBlocksLive```
