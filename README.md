@@ -7,4 +7,4 @@ Setup:
 - Script assumes Geth is in the same directory, if not edit line 42 (./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
 
 Run:
-./watchBlocksLive
+- ./watchBlocksLive
