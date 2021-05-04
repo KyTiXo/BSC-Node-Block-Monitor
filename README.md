@@ -12,7 +12,7 @@ Bash script that compares local geth block number to BSCscan.com's API. If the l
 ### Run:
 - ```./watchBlocksLive```
 
-* If the node hasn't converted into a full node yet, it will monitor the log and Geth without clutter as shown below.
+* If the node hasn't converted into a full node yet, it will monitor the log and Geth without clutter as shown below. If "NODE Local Block" shows 0 this means that you're still in syncing mode and havn't reached a full node yet.
 > ![2021-05-04_14-28-18](https://user-images.githubusercontent.com/28745523/117052143-5f392180-ace5-11eb-9fca-c411feffc51b.jpg)
 
 * You're in sync and ahead of the BSCScan.com - This is what you WANT to see.
