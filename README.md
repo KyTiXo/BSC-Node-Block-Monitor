@@ -12,8 +12,8 @@ Bash script that compares local geth block number to BSCscan.com's API. If the l
 ### Run:
 - ```./watchBlocksLive```
 
-* Result if the node hasn't converted into a full node yet, it will monitor the log for the age-from-live-block variable without clutter.
+* If the node hasn't converted into a full node yet, it will monitor the log and Geth without clutter as shown below.
 > ![2021-05-04_14-28-18](https://user-images.githubusercontent.com/28745523/117052143-5f392180-ace5-11eb-9fca-c411feffc51b.jpg)
 
-* You're in sync and ahead of the BSCScan.com
+* You're in sync and ahead of the BSCScan.com - This is what you WANT to see.
 > ![image](https://user-images.githubusercontent.com/28745523/117009521-da84de00-acb9-11eb-90a7-8e5e4a1abe48.png)
