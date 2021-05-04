@@ -1,0 +1,65 @@
+#!/bin/bash
+
+#requires JQ to be installed for parsing Json from BscScan (sudo apt install jq)
+#needs execute rights (sudo chmod +x watchBlocksLive)
+#Script assumes Geth is in the same directory on line 42 (./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
+
+#paste your bscan API key here
+BSCSCANAPIKEY=APIKEYPASTEHERE
+
+#bsc.log location
+BSCLOG='node/bsc.log'
+
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+function get_age() {
+    echo "$(tail -1 $BSCLOG | awk '/age/ {print $11}')";
+}
+
+function stillSyncing(){
+    if [[ "$var" == "" ]]; then
+        var="$(get_age)"
+        sleep 2
+    fi
+
+    var2="$(get_age)"
+
+    if [[ "$var" != "$var2" ]] && [[ "$var2" != "" ]]; then
+        var=$var2
+        echo -ne ' 'Synced age from latest block: ${RED}${var//"age="/}${NC}  \\r
+        sleep 2
+    fi
+}
+#===================================
+
+#get value from bsc
+echo -e ${NC}'Grabbing latest block from BSCScan API'
+url='https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp='$(date +"%s")'&closest=before&apikey='$BSCSCANAPIKEY
+highest=$(./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
+currentblock=$(curl -s "$url" | jq -r '.result')
+diff="$(($currentblock - $highest))"
+
+echo =============================
+echo BSC Latest Block: $currentblock
+echo ""
+echo NODE Local Block: $highest
+echo ""
+if [[ "0" -eq $highest ]]; then
+	echo -e "${RED}Out of Sync!...${NC}";
+    echo -e "${GREEN}Starting Log Monitor:${NC}";
+    echo =============================
+    while true; do stillSyncing; sleep 2; done
+else
+
+if [[ "0" -lt $diff ]]; then
+    echo -e "${RED}You are $diff blocks behind${NC}"
+else
+    echo -e "${GREEN}You are synced and AHEAD of BSCscan.com by $((-1 * $diff)) blocks${NC}"
+fi
+fi
+echo =============================
+
