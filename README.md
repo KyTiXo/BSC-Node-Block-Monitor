@@ -1,5 +1,5 @@
 # BSC Node Block Monitor
-Bash script that compares local geth block number to BSCscan.com's API. If the local node is not a full node yet, it will monitor the log file and display the "Age" from live block from the log every few seconds. This script is useful when trying to monitor or sync a BSC node. See screenshots below.
+Bash script that compares local geth block number to BSCscan.com's API. If the local node is not a full node yet, it will monitor the log file and display the "Age" from live block from the log every few seconds. This script is useful when trying to monitor or sync a BSC node. Script also has some error handling built into it. See screenshots below.
 
 ## You will need to get a free API key from BSCScan.com
 - https://bscscan.com/myapikey
@@ -7,8 +7,7 @@ Bash script that compares local geth block number to BSCscan.com's API. If the l
 ### Setup:
 - ```sudo apt install jq``` - requires JQ to be installed for parsing Json from BscScan API
 - ```sudo chmod +x watchBlocksLive```
-- Add APIKey in script from https://bscscan.com/myapikey
-- Script assumes Geth execute is in the same directory, if not edit the locations of bsclog and geth at the top of the script.
+- Add ```BSCSCANAPIKEY``` from https://bscscan.com/myapikey
 
 ### Run:
 - ```./watchBlocksLive```
