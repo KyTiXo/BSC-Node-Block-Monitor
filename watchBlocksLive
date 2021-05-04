@@ -1,21 +1,22 @@
 #!/bin/bash
 
-#requires JQ to be installed for parsing Json from BscScan (sudo apt install jq)
-#needs execute rights (sudo chmod +x watchBlocksLive)
-#Script assumes Geth is in the same directory on line 42 (./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
+#Requires JQ to be installed for parsing Json from BscScan (sudo apt install jq)
+#Needs execute rights (sudo chmod +x watchBlocksLive)
+#Script assumes it's in the same directory as "geth", if not you'll need to edit the paths
 
+#=======Options===========
 #paste your bscan API key here
 BSCSCANAPIKEY=APIKEYPASTEHERE
-
 #bsc.log location
 BSCLOG='node/bsc.log'
-
+#geth executable location
+GETHLOCATION='./geth'
+#=========================
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
-
 function get_age() {
     echo "$(tail -1 $BSCLOG | awk '/age/ {print $11}')";
 }
@@ -39,7 +40,7 @@ function stillSyncing(){
 #get value from bsc
 echo -e ${NC}'Grabbing latest block from BSCScan API'
 url='https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp='$(date +"%s")'&closest=before&apikey='$BSCSCANAPIKEY
-highest=$(./geth attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
+highest=$($GETHLOCATION attach http://127.0.0.1:8545 --exec 'eth.blockNumber')
 currentblock=$(curl -s "$url" | jq -r '.result')
 diff="$(($currentblock - $highest))"
 
@@ -62,4 +63,3 @@ else
 fi
 fi
 echo =============================
-
