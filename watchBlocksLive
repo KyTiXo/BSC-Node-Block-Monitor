@@ -51,6 +51,9 @@ function get_highest_block(){
 function get_current_block(){
     echo $($GETHLOCATION attach http://127.0.0.1:8545 --exec 'eth.syncing.currentBlock')
 }
+function get_peerCount(){
+    echo $($GETHLOCATION attach http://127.0.0.1:8545 --exec 'net.peerCount')
+}
 export firstsync="1"
 function stillSyncing(){
 
@@ -70,10 +73,10 @@ function stillSyncing(){
 
     currentBlock=$(get_current_block)
     highestBlock=$(get_highest_block)
-
     currentDiff="$(($highestBlock - $currentBlock))"
+    peerCount=$(get_peerCount)
 
-    TABLEDATA="Highest,Current,Diff,AgeDiff\n$highestBlock,$currentBlock,$currentDiff,$AGE"
+    TABLEDATA="Highest,Current,Diff,AgeDiff,PeerCount\n$highestBlock,$currentBlock,$currentDiff,$AGE,$peerCount"
     printTable ',' $(echo $TABLEDATA)
     firstsync="0"
     sleep 3
